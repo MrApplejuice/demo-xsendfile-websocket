@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+  <p>Hello world!</p>
+  <script>
+  var exampleSocket = null;
+  var run = true;
+  window.addEventListener("load", function() { 
+    exampleSocket = new WebSocket("ws://" + window.location.host + "/websocket", "protocolOne");
+    exampleSocket.addEventListener("open", function(event) {
+      if (exampleSocket.readyState === WebSocket.OPEN) {
+        console.log("Connected!");
+      } else {
+        console.log("Connection failed!");
+        return;
+      }
+      exampleSocket.addEventListener("message", function(event) {
+        console.log("-- new message --");
+        console.log(event);
+        
+        if (!run) {
+          return;
+        }
+        
+        window.setTimeout(function() {
+          console.log("'" + event.data + "' -> " + event.origin);
+          exampleSocket.send(event.data);
+        }, 1000);
+      });
+      
+      exampleSocket.send("Sending some test text!");
+    });
+  });
+  </script>
+</body>
+</html>
