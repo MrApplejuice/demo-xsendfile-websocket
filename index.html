@@ -5,11 +5,20 @@
 <meta charset="utf-8">
 </head>
 <body>
-  <p>Hello world!</p>
+  <h2>Sending text</h2>
+  <textarea id="mainarea" style="width:20cm;height:10cm;"></textarea>
+  <button onclick="run = false;">Stop</button>
   <script>
   var exampleSocket = null;
   var run = true;
-  window.addEventListener("load", function() { 
+  
+  function log(message) {
+    var mainarea = document.getElementById("mainarea");
+    mainarea.textContent = mainarea.textContent + message + "\n";
+    console.log(message);
+  }
+  
+  window.addEventListener("load", function() {
     exampleSocket = new WebSocket("ws://" + window.location.host + "/websocket", "protocolOne");
     exampleSocket.addEventListener("open", function(event) {
       if (exampleSocket.readyState === WebSocket.OPEN) {
@@ -19,15 +28,14 @@
         return;
       }
       exampleSocket.addEventListener("message", function(event) {
-        console.log("-- new message --");
-        console.log(event);
+        log("-- received new message: " + event.data);
         
         if (!run) {
           return;
         }
         
         window.setTimeout(function() {
-          console.log("'" + event.data + "' -> " + event.origin);
+          log("Resending: '" + event.data + "' -> " + event.origin);
           exampleSocket.send(event.data);
         }, 1000);
       });

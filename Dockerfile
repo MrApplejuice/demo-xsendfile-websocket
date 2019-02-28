@@ -10,4 +10,4 @@ COPY nginx.conf /etc/nginx/
 
 VOLUME /app
 WORKDIR /app 
-ENTRYPOINT ["/bin/bash", "-c", "FLASK_APP=server.py flask run --reload --host=0.0.0.0 --port=8888 & ( while true ; do timeout -t 15 python3 test.py ; echo restarting websocket...; done ) & echo starting nginx ; nginx"]
+ENTRYPOINT ["/bin/bash", "-c", "FLASK_APP=server.py flask run --reload --host=0.0.0.0 --port=8888 & python3 test.py & echo starting nginx ; nginx"]

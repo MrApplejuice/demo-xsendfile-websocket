@@ -1,1 +1,10 @@
-docker run -it --rm -p 81:80 -p 18888:9999 --name tt -v $(pwd):/app:ro tt
+#!/bin/bash
+
+if [ -z "$1" ] ; then
+    port=8000
+else
+    port=$1
+fi
+
+docker build -t demo-xsendfile-websockets .
+docker run -it --rm -p $port:80 --name tt -v $(pwd):/app:ro demo-xsendfile-websockets
